@@ -1,0 +1,85 @@
+#cloud-config
+
+timezone: "UTC"
+
+hostname: "{{ hostname }}"
+fqdn: "{{ fqdn }}"
+
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+apt:
+  sources:
+    docker.list:
+      source: deb [arch=amd64] https://download.docker.com/linux/ubuntu $RELEASE stable
+      keyid: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    influxdb.list:
+      source: deb [arch=amd64] https://repos.influxdata.com/ubuntu stable main
+      keyid: 05CE15085FC09D18E99EFB22684A14CF2582E0C5
+
+packages:
+  - "ack"
+  - "curl"
+  - "htop"
+  - "mc"
+  - "moreutils"
+  - "rsync"
+  - "screen"
+  - "vim"
+  - "docker-ce"
+  - "docker-ce-cli"
+  - "telegraf"
+
+system_info:
+  default_user:
+    name: "patron"
+    lock_passwd: true
+    gecos: "Teloshost Patron"
+
+users:
+  - "default"
+
+ssh_import_id: [{{personnel|join(", ")}}]
+
+write_files:
+  - path: "/etc/teloshost"
+    content: "cloud-init: true\n"
+
+  - path: "/etc/telegraf/telegraf.conf"
+    content: |
+      [agent]
+        interval = "10s"
+        round_interval = true
+        metric_batch_size = 1000
+        metric_buffer_limit = 10000
+        collection_jitter = "0s"
+        flush_interval = "10s"
+        flush_jitter = "0s"
+        precision = ""
+        debug = false
+        quiet = false
+        logfile = ""
+        hostname = "{{ hostname }}"
+        omit_hostname = false
+      [[inputs.cpu]]
+        percpu = true
+        totalcpu = true
+        collect_cpu_time = false
+        report_active = false
+      [[inputs.disk]]
+        ignore_fs = ["tmpfs", "devtmpfs", "devfs", "overlay", "aufs", "squashfs"]
+      [[inputs.diskio]]
+      [[inputs.mem]]
+      [[inputs.net]]
+      [[inputs.processes]]
+      [[inputs.swap]]
+      [[inputs.system]]
+      [[outputs.influxdb_v2]]
+        urls = ["{{ monitor_url }}"]
+        token = "{{ monitor_token }}"
+        organization = "{{ monitor_organization }}"
+        bucket = "{{ monitor_bucket }}"
+
+runcmd:
+  - ["usermod", "-aG", "docker", "patron"]
