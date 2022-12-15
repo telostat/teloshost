@@ -1,0 +1,180 @@
+- name: Setup and Configure Telegraf
+  hosts: all
+
+  tasks:
+    - name: Run dj-wasabi.telegraf role
+      ansible.builtin.include_role:
+        name: dj-wasabi.telegraf
+      vars:
+        ######################
+        ## TELEGRAF PACKAGE ##
+        ######################
+
+        ## The installation method to be used. Can choose between: repo, offline or online.
+        telegraf_agent_package_method: online
+
+        ## If the package should be present or latest. When set to latest, telegraf_agent_version will be ignored. Default: present
+        telegraf_agent_package_state: latest
+
+        ##########################################
+        ## TELEGRAF AGENT PROCESS CONFIGURATION ##
+        ##########################################
+
+        ## The interval configured for sending data to the server. Default: 10
+        telegraf_agent_interval: 10
+
+        ## Run Telegraf in debug mode. Default: False
+        telegraf_agent_debug: false
+
+        ## Rounds collection interval to 'interval' Default: True
+        telegraf_agent_round_interval: true
+
+        ## Default data flushing interval for all outputs. Default: 10
+        telegraf_agent_flush_interval: 10
+
+        ## Jitter the flush interval by a random amount. Default: 0
+        telegraf_agent_flush_jitter: 0
+
+        ## Configure AWS ec2 tags into Telegraf tags section Default: False
+        telegraf_agent_aws_tags: false
+
+        ## Define a prefix for AWS ec2 tags. Default: ""
+        telegraf_agent_aws_tags_prefix: ""
+
+        ## Jitter the collection by a random amount. Default: 0 (since v0.13)
+        telegraf_agent_collection_jitter: 0
+
+        ## The agent metric batch size. Default: 1000 (since v0.13)
+        telegraf_agent_metric_batch_size: 1000
+
+        ## The agent metric buffer limit. Default: 10000 (since v0.13)
+        telegraf_agent_metric_buffer_limit: 10000
+
+        ## Run Telegraf in quiet mode (error messages only). Default: False (since v0.13)
+        telegraf_agent_quiet: false
+
+        ## The agent logfile name. Default: '' (means to log to stdout) (since v1.1)
+        telegraf_agent_logfile: ""
+
+        ## The agent hostname. Default: ansible_fqdn
+        telegraf_agent_hostname: "{{ ansible_nodename }}"
+
+        ## Do no set the "host" tag in the agent. Default: False (since v1.1)
+        telegraf_agent_omit_hostname: false
+
+        ##########################################
+        ## TELEGRAF OUTPUT PLUGIN CONFIGURATION ##
+        ##########################################
+
+        telegraf_agent_output:
+          - type: influxdb_v2
+            config:
+              - urls = ["{{ teloshost.telegraf.url }}"]
+              - token = "{{ teloshost.telegraf.token }}"
+              - bucket = "{{ teloshost.telegraf.bucket }}"
+              - organization = "{{ teloshost.telegraf.organization }}"
+
+        #########################################
+        ## TELEGRAF INPUT PLUGIN CONFIGURATION ##
+        #########################################
+
+        telegraf_plugins_default:
+          - plugin: cpu
+            config:
+              ## Whether to report per-cpu stats or not
+              - percpu = true
+
+              ## Whether to report total system cpu stats or not
+              - totalcpu = true
+
+              ## If true, collect raw CPU time metrics.
+              - collect_cpu_time = false
+
+              ## If true, compute and report the sum of all non-idle CPU states.
+              - report_active = false
+
+          - plugin: disk
+            config:
+              ## Ignore mount points by filesystem type.
+              - ignore_fs = ["tmpfs", "devtmpfs", "devfs", "overlay", "aufs", "squashfs"]
+
+          - plugin: diskio
+
+          - plugin: mem
+
+          - plugin: net
+
+          - plugin: processes
+
+          - plugin: swap
+
+          - plugin: system
+
+          - plugin: docker
+            config:
+              ## Docker Endpoint
+              ##   To use TCP, set endpoint = "tcp://[ip]:[port]"
+              ##   To use environment variables (ie, docker-machine), set endpoint = "ENV"
+              - endpoint = "unix:///var/run/docker.sock"
+
+              ## Set to true to collect Swarm metrics(desired_replicas, running_replicas)
+              ## Note: configure this in one of the manager nodes in a Swarm cluster.
+              ## configuring in multiple Swarm managers results in duplication of metrics.
+              - gather_services = false
+
+              ## Only collect metrics for these containers. Values will be appended to
+              ## container_name_include.
+              ## Deprecated (1.4.0), use container_name_include
+              - container_names = []
+
+              ## Set the source tag for the metrics to the container ID hostname, eg first 12 chars
+              - source_tag = false
+
+              ## Containers to include and exclude. Collect all if empty. Globs accepted.
+              - container_name_include = []
+              - container_name_exclude = []
+
+              ## Container states to include and exclude. Globs accepted.
+              ## When empty only containers in the "running" state will be captured.
+              ## example: container_state_include = ["created", "restarting", "running", "removing", "paused", "exited", "dead"]
+              ## example: container_state_exclude = ["created", "restarting", "running", "removing", "paused", "exited", "dead"]
+              # container_state_include = []
+              # container_state_exclude = []
+
+              ## Timeout for docker list, info, and stats commands
+              - timeout = "5s"
+
+              ## Whether to report for each container per-device blkio (8:0, 8:1...) and
+              ## network (eth0, eth1, ...) stats or not
+              - perdevice = false
+
+              ## Whether to report for each container total blkio and network stats or not
+              - total = true
+
+              ## docker labels to include and exclude as tags.  Globs accepted.
+              ## Note that an empty array for both will include all labels as tags
+              - docker_label_include = []
+              - docker_label_exclude = []
+
+              ## Which environment variables should we use as a tag
+              - tag_env = ["JAVA_HOME", "HEAP_SIZE"]
+
+              ## Optional TLS Config
+              # tls_ca = "/etc/telegraf/ca.pem"
+              # tls_cert = "/etc/telegraf/cert.pem"
+              # tls_key = "/etc/telegraf/key.pem"
+              ## Use TLS but skip chain & host verification
+              # insecure_skip_verify = false
+
+    - name: Add telegraf user to docker group
+      ansible.builtin.user:
+        name: telegraf
+        append: true
+        groups: docker
+      become: true
+
+    - name: Restart service telegraf
+      ansible.builtin.service:
+        name: telegraf
+        state: restarted
+      become: true
