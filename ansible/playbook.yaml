@@ -1,2 +1,4 @@
-- name: "Import playbook: telegraf"
-  import_playbook: "playbook_telegraf.yaml"
+- import_playbook: playbook_01_configure_host.yml
+- import_playbook: playbook_02_configure_sudo.yml
+- import_playbook: playbook_03_add_authorized_keys.yml
+- import_playbook: playbook_04_setup_telegraf.yaml

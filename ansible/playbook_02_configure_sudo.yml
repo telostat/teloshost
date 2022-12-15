@@ -1,0 +1,12 @@
+- name: Configure sudo
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Ensure that sudo group can sudo without password
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: "^%sudo"
+        line: "%sudo ALL=(ALL) NOPASSWD: ALL"
+        validate: "visudo -cf %s"

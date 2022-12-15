@@ -1,0 +1,26 @@
+- name: Setup Backup Machine
+  hosts: all
+  tasks:
+    - name: Install rclone
+      shell: |
+        curl https://rclone.org/install.sh | sudo bash
+      args:
+        creates: /usr/bin/rclone
+
+    - name: Install rrclone
+      become: yes
+      become_method: sudo
+      get_url:
+        url: "https://github.com/telostat/rrclone/releases/latest/download/rrclone-{{ ansible_facts['system'] }}-{{ ansible_facts['architecture'] }}"
+        dest: /usr/local/bin/rrclone
+        mode: "755"
+
+    - name: Install required packages
+      become: yes
+      become_method: sudo
+      apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - cryptsetup
+          - restic

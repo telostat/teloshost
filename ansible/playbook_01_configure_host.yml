@@ -1,0 +1,32 @@
+- name: Configure Host
+  hosts: all
+  become: true
+  become_method: sudo
+  tasks:
+    - name: Set hostname
+      hostname:
+        name: "{{ inventory_hostname }}"
+    - name: Set timezone to UTC
+      timezone:
+        name: UTC
+    - name: Upgrade installed apt packages
+      apt:
+        upgrade: safe
+        update_cache: yes
+    - name: Install required packages
+      apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - ack
+          - caddy
+          - curl
+          - htop
+          - jq
+          - mc
+          - moreutils
+          - net-tools
+          - rsync
+          - screen
+          - tmux
+          - vim

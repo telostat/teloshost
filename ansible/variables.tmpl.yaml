@@ -1,3 +1,4 @@
+devops: []
 teloshost:
   telegraf:
     url: "https://monitor.example.com"
