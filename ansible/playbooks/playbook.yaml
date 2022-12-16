@@ -1,0 +1,8 @@
+- name: Import playbook to configure host
+  import_playbook: ./partials/01_configure_host.yaml
+- name: Import playbook to configure sudo
+  import_playbook: ./partials/02_configure_sudo.yaml
+- name: Import playbook to add authorized keys
+  import_playbook: ./partials/03_add_authorized_keys.yaml
+- name: Import playbook to setup telegraf
+  import_playbook: ./partials/04_setup_telegraf.yaml

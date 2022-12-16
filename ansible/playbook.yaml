@@ -1,8 +1,0 @@
-- name: Import playbook to configure host
-  import_playbook: playbook_01_configure_host.yml
-- name: Import playbook to configure sudo
-  import_playbook: playbook_02_configure_sudo.yml
-- name: Import playbook to add authorized keys
-  import_playbook: playbook_03_add_authorized_keys.yml
-- name: Import playbook to setup telegraf
-  import_playbook: playbook_04_setup_telegraf.yaml
