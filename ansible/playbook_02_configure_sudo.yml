@@ -4,7 +4,7 @@
   become_method: sudo
   tasks:
     - name: Ensure that sudo group can sudo without password
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/sudoers
         state: present
         regexp: "^%sudo"

@@ -1,6 +1,6 @@
 - name: Setup Docker on DECAF Cultivator Host
   hosts: all
-  become: yes
+  become: true
   become_method: sudo
   roles:
     - role: geerlingguy.docker
@@ -9,13 +9,13 @@
   hosts: all
   tasks:
     - name: Register the Current Username
-      command: whoami
+      ansible.builtin.command: whoami
       changed_when: false
       become: false
       register: whoami
 
     - name: Ensure Current User is Added to the Docker Group
-      become: yes
+      become: true
       become_method: sudo
       ansible.builtin.user:
         name: "{{ whoami.stdout }}"
@@ -23,9 +23,9 @@
         append: true
 
     - name: Install ctop
-      become: yes
+      become: true
       become_method: sudo
-      get_url:
+      ansible.builtin.get_url:
         url: https://github.com/bcicen/ctop/releases/download/v0.7.7/ctop-0.7.7-linux-amd64
         dest: /usr/local/bin/ctop
         mode: "755"

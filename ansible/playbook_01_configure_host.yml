@@ -4,17 +4,17 @@
   become_method: sudo
   tasks:
     - name: Set hostname
-      hostname:
+      ansible.builtin.hostname:
         name: "{{ inventory_hostname }}"
     - name: Set timezone to UTC
-      timezone:
+      community.general.timezone:
         name: UTC
     - name: Upgrade installed apt packages
-      apt:
+      ansible.builtin.apt:
         upgrade: safe
-        update_cache: yes
+        update_cache: true
     - name: Install required packages
-      apt:
+      ansible.builtin.apt:
         name: "{{ packages }}"
       vars:
         packages:
