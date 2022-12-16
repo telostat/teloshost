@@ -1,8 +1,17 @@
+## Purpose: Setup a teloshost system.
+##
+## This playbook uses various playbooks from the `./partials` directory to setup
+## a typical teloshost. We consider this a standard base system for all
+## teloshosts.
+
 - name: Import playbook to configure host
-  import_playbook: ./partials/01_configure_host.yaml
+  ansible.builtin.import_playbook: ./partials/01_configure_host.yaml
+
 - name: Import playbook to configure sudo
-  import_playbook: ./partials/02_configure_sudo.yaml
+  ansible.builtin.import_playbook: ./partials/02_configure_sudo.yaml
+
 - name: Import playbook to add authorized keys
-  import_playbook: ./partials/03_add_authorized_keys.yaml
+  ansible.builtin.import_playbook: ./partials/03_add_authorized_keys.yaml
+
 - name: Import playbook to setup telegraf
-  import_playbook: ./partials/04_setup_telegraf.yaml
+  ansible.builtin.import_playbook: ./partials/04_setup_telegraf.yaml
