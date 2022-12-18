@@ -1,9 +1,5 @@
 ## Purpose: Setup a Docker Host.
 ## Idempotent: Yes, unless variables change.
-## Variables:
-##   - ansible_user_id (provided, default: <defined by Ansible>)
-##   - teloshost__docker__enable (optional, default: false)
-##   - teloshost__docker__ctop_version (optional, default: 0.7.7)
 ##
 ## This playbook performs necessary actions for setting up a Docker Host.
 

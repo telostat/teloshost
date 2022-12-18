@@ -1,9 +1,5 @@
 ## Purpose: Perform SSH configuration.
 ## Idempotent: Yes, unless variables change.
-## Variables:
-##   - ansible_user_id (provided, default: <defined by Ansible>)
-##   - teloshost__base__ssh__authorized_keys__common (optional, default: [])
-##   - teloshost__base__ssh__authorized_keys__extras (optional, default: [])
 ##
 ## This playbook performs SSH server and access configuration.
 

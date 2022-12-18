@@ -1,8 +1,5 @@
 ## Purpose: Install and upgrade system packages.
 ## Idempotent: Yes, unless variables change and there are no package upgrades.
-## Variables:
-##   - teloshost__base__packages__common (provided, default: <see below>)
-##   - teloshost__base__packages__extras (optional, default: [])
 ##
 ## This playbook install essential system packages. If required, additional
 ## packages can be installed via `teloshost__base__packages__extras` variable.

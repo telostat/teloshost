@@ -1,6 +1,5 @@
 ## Purpose: Configure sudo.
 ## Idempotent: Yes.
-## Variables: None.
 ##
 ## This playbook configures sudo.
 

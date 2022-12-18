@@ -1,7 +1,5 @@
 ## Purpose: Set the timezone of the target host.
 ## Idempotent: Yes, unless variables change.
-## Variables:
-##   - teloshost__base__timezone (required, default: "UTC")
 ##
 ## Most of the time, we want the target host's timezone is set to be UTC. This is
 ## set as the  default inside this playbook, ie. if the variable

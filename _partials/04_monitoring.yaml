@@ -1,12 +1,5 @@
 ## Purpose: Perform SSH configuration.
 ## Idempotent: Yes, unless variables change.
-## Variables:
-##   - inventory_hostname (provided, default: <defined by Ansible>)
-##   - teloshost__monitoring__enable (optional, default: True)
-##   - teloshost__monitoring__telegraf__url (optional, default: None)
-##   - teloshost__monitoring__telegraf__token (optional, default: None)
-##   - teloshost__monitoring__telegraf__bucket (optional, default: None)
-##   - teloshost__monitoring__telegraf__organization (optional, default: None)
 ##
 ## This playbook performs necessary configuration for setting up monitors on the
 ## remote teloshost.

@@ -1,7 +1,5 @@
 ## Purpose: Set the hostname of the target host.
 ## Idempotent: Yes.
-## Variables:
-##   - inventory_hostname (provided, default: <defined by Ansible>)
 ##
 ## We always consider that the inventory hostname is the target host's hostname.
 
