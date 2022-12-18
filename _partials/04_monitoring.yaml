@@ -1,4 +1,17 @@
-- name: Setup and Configure Telegraf
+## Purpose: Perform SSH configuration.
+## Idempotent: Yes, unless variables change.
+## Variables:
+##   - inventory_hostname (provided, default: <defined by Ansible>)
+##   - teloshost__monitoring__enabled (optional, default: True)
+##   - teloshost__monitoring__telegraf__url (optional, default: None)
+##   - teloshost__monitoring__telegraf__token (optional, default: None)
+##   - teloshost__monitoring__telegraf__bucket (optional, default: None)
+##   - teloshost__monitoring__telegraf__organization (optional, default: None)
+##
+## This playbook performs necessary configuration for setting up monitors on the
+## remote teloshost.
+
+- name: Setup Base (Monitoring)
   hosts: all
 
   tasks:
@@ -11,7 +24,7 @@
         ######################
 
         ## The installation method to be used. Can choose between: repo, offline or online.
-        telegraf_agent_package_method: online
+        telegraf_agent_package_method: repo
 
         ## If the package should be present or latest. When set to latest, telegraf_agent_version will be ignored. Default: present
         telegraf_agent_package_state: latest
@@ -57,7 +70,7 @@
         telegraf_agent_logfile: ""
 
         ## The agent hostname. Default: ansible_fqdn
-        telegraf_agent_hostname: "{{ ansible_nodename }}"
+        telegraf_agent_hostname: "{{ inventory_hostname }}"
 
         ## Do no set the "host" tag in the agent. Default: False (since v1.1)
         telegraf_agent_omit_hostname: false
@@ -69,10 +82,10 @@
         telegraf_agent_output:
           - type: influxdb_v2
             config:
-              - urls = ["{{ teloshost.telegraf.url }}"]
-              - token = "{{ teloshost.telegraf.token }}"
-              - bucket = "{{ teloshost.telegraf.bucket }}"
-              - organization = "{{ teloshost.telegraf.organization }}"
+              - urls = ["{{ teloshost__monitoring__telegraf__url }}"]
+              - token = "{{ teloshost__monitoring__telegraf__token }}"
+              - bucket = "{{ teloshost__monitoring__telegraf__bucket }}"
+              - organization = "{{ teloshost__monitoring__telegraf__organization }}"
 
         #########################################
         ## TELEGRAF INPUT PLUGIN CONFIGURATION ##
@@ -96,7 +109,7 @@
           - plugin: disk
             config:
               ## Ignore mount points by filesystem type.
-              - ignore_fs = ["tmpfs", "devtmpfs", "devfs", "overlay", "aufs", "squashfs"]
+              - ignore_fs = ["tmpfs", "devtmpfs", "devfs", "overlay", "aufs", "squashfs", "fuse.snapfuse"]
 
           - plugin: diskio
 
@@ -110,6 +123,7 @@
 
           - plugin: system
 
+          ## TODO: If the teloshost is NOT a Docker Host, do not add this configuration.
           - plugin: docker
             config:
               ## Docker Endpoint
@@ -166,15 +180,16 @@
               ## Use TLS but skip chain & host verification
               # insecure_skip_verify = false
 
+    ## TODO: If the teloshost is NOT a Docker Host, do not add this configuration.
     - name: Add telegraf user to docker group
+      become: true
       ansible.builtin.user:
         name: telegraf
         append: true
         groups: docker
-      become: true
 
     - name: Restart service telegraf
+      become: true
       ansible.builtin.service:
         name: telegraf
         state: restarted
-      become: true

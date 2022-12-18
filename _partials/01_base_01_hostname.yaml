@@ -1,0 +1,15 @@
+## Purpose: Set the hostname of the target host.
+## Idempotent: Yes.
+## Variables:
+##   - inventory_hostname (provided, default: <defined by Ansible>)
+##
+## We always consider that the inventory hostname is the target host's hostname.
+
+- name: Setup Base (Hostname)
+  hosts: all
+
+  tasks:
+    - name: Set hostname
+      become: true
+      ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}"

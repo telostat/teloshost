@@ -1,0 +1,37 @@
+## Purpose: Setup a Docker Host.
+## Idempotent: Yes, unless variables change.
+## Variables:
+##   - ansible_user_id (provided, default: <defined by Ansible>)
+##   - teloshost__docker__ctop_version (optional, default: 0.7.7)
+##
+## This playbook performs necessary actions for setting up a Docker Host.
+
+- name: Setup Docker Host (Service Installation)
+  hosts: dockerhosts
+  become: true
+
+  tasks:
+    - name: Run geerlingguy.docker role
+      ansible.builtin.include_role:
+        name: geerlingguy.docker
+
+- name: Setup Docker Host (Service Configuration and Auxiliaries)
+  hosts: dockerhosts
+
+  tasks:
+    - name: Ensure current user is added to the docker group
+      become: true
+      ansible.builtin.user:
+        name: "{{ ansible_user_id }}"
+        groups: docker
+        append: true
+
+    - name: Install ctop
+      become: true
+      ansible.builtin.get_url:
+        url: https://github.com/bcicen/ctop/releases/download/v{{ ctop_version }}/ctop-{{ ctop_version }}-linux-amd64
+        dest: /usr/local/bin/ctop
+        mode: "755"
+      vars:
+        ## TODO: Add variables for operating system and architecture.
+        ctop_version: "{{ teloshost__docker__ctop_version | default('0.7.7', true) }}"

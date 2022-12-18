@@ -1,7 +1,0 @@
-devops: []
-teloshost:
-  telegraf:
-    url: "https://monitor.example.com"
-    token: "my-secret-token"
-    bucket: "my-bucket"
-    organization: "my-organization"

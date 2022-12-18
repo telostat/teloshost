@@ -1,0 +1,18 @@
+## Purpose: Set the timezone of the target host.
+## Idempotent: Yes, unless variables change.
+## Variables:
+##   - teloshost__base__timezone (required, default: "UTC")
+##
+## Most of the time, we want the target host's timezone is set to be UTC. This is
+## set as the  default inside this playbook, ie. if the variable
+## `teloshost__base__timezone` is not set anywhere else, UTC will be set as the
+## target host's timezone.
+
+- name: Setup Base (Timezone)
+  hosts: all
+
+  tasks:
+    - name: Set timezone
+      become: true
+      community.general.timezone:
+        name: "{{ teloshost__base__timezone | default('UTC', true) }}"
