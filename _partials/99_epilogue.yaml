@@ -3,8 +3,6 @@
 
 - name: Preamble
   hosts: all
-  vars:
-    teloshost__logfile: "/var/log/teloshost.yaml"
 
   tasks:
     - name: Add a line to the end of the log file

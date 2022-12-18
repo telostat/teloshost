@@ -4,6 +4,18 @@
 ## a typical teloshost. We consider this a standard base system for all
 ## teloshosts.
 
+########################
+## SECTION: SET FACTS ##
+########################
+
+- name: Set facts
+  hosts: all
+
+  tasks:
+    - name: Set teloshost facts
+      ansible.builtin.set_fact:
+        teloshost__logfile: "/var/log/teloshost.yaml"
+
 #######################
 ## SECTION: PREAMBLE ##
 #######################
