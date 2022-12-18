@@ -49,6 +49,7 @@
 
 - name: Import playbook to setup Docker hosts
   ansible.builtin.import_playbook: ./_partials/03_service_docker.yaml
+  when: teloshost__docker__enable is defined and teloshost__docker__enable is truthy(convert_bool=True)
 
 #########################
 ## SECTION: MONITORING ##

@@ -124,6 +124,10 @@
           - plugin: system
 
           ## TODO: If the teloshost is NOT a Docker Host, do not add this configuration.
+          ##
+          ## This does not work here:
+          ##
+          ## when: teloshost__docker__enable is defined and teloshost__docker__enable is truthy(convert_bool=True)
           - plugin: docker
             config:
               ## Docker Endpoint

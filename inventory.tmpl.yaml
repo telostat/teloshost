@@ -6,6 +6,7 @@ all:
         - <CHANGEME>
       teloshost__base__packages__extras:
         - <CHANGEME>
+      teloshost__docker__enable: false
 
   vars:
     teloshost__base__ssh__authorized_keys__common:
@@ -15,7 +16,3 @@ all:
     teloshost__monitoring__telegraf__token: <CHANGEME>
     teloshost__monitoring__telegraf__bucket: <CHANGEME>
     teloshost__monitoring__telegraf__organization: <CHANGEME>
-
-dockerhosts:
-  hosts:
-    teloshost:
