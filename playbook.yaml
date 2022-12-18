@@ -57,7 +57,7 @@
 
 - name: Import playbook to setup and configure monitoring
   ansible.builtin.import_playbook: ./_partials/04_monitoring.yaml
-  when: (teloshost__monitoring__enabled is not defined or teloshost__monitoring__enabled is truthy(convert_bool=True)) and
+  when: (teloshost__monitoring__enable is not defined or teloshost__monitoring__enable is truthy(convert_bool=True)) and
         (teloshost__monitoring__telegraf__url is defined) and
         (teloshost__monitoring__telegraf__token is defined) and
         (teloshost__monitoring__telegraf__bucket is defined) and

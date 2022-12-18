@@ -2,7 +2,7 @@
 ## Idempotent: Yes, unless variables change.
 ## Variables:
 ##   - inventory_hostname (provided, default: <defined by Ansible>)
-##   - teloshost__monitoring__enabled (optional, default: True)
+##   - teloshost__monitoring__enable (optional, default: True)
 ##   - teloshost__monitoring__telegraf__url (optional, default: None)
 ##   - teloshost__monitoring__telegraf__token (optional, default: None)
 ##   - teloshost__monitoring__telegraf__bucket (optional, default: None)
