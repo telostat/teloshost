@@ -13,7 +13,7 @@
         name: geerlingguy.docker
 
 - name: Setup Docker Host (Service Configuration and Auxiliaries)
-  hosts: dockerhosts
+  hosts: all
 
   tasks:
     - name: Ensure current user is added to the docker group
