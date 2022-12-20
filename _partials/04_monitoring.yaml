@@ -6,6 +6,9 @@
 
 - name: Setup Base (Monitoring)
   hosts: all
+  become: true
+  vars:
+    monitor_docker: "{{ teloshost__docker__enable is defined and teloshost__docker__enable is truthy(convert_bool=True) }}"
 
   tasks:
     - name: Run dj-wasabi.telegraf role
@@ -84,7 +87,8 @@
         ## TELEGRAF INPUT PLUGIN CONFIGURATION ##
         #########################################
 
-        telegraf_plugins_default:
+        ## This is not included in the telegraf configuration directly. See `telegraf_plugins_default` variable.
+        telegraf_plugins_default_base:
           - plugin: cpu
             config:
               ## Whether to report per-cpu stats or not
@@ -116,11 +120,8 @@
 
           - plugin: system
 
-          ## TODO: If the teloshost is NOT a Docker Host, do not add this configuration.
-          ##
-          ## This does not work here:
-          ##
-          ## when: teloshost__docker__enable is defined and teloshost__docker__enable is truthy(convert_bool=True)
+        ## This is not included in the telegraf configuration directly. See `telegraf_plugins_default` variable.
+        telegraf_plugins_default_extras_docker:
           - plugin: docker
             config:
               ## Docker Endpoint
@@ -177,16 +178,17 @@
               ## Use TLS but skip chain & host verification
               # insecure_skip_verify = false
 
-    ## TODO: If the teloshost is NOT a Docker Host, do not add this configuration.
+        telegraf_plugins_default: |
+          {{ telegraf_plugins_default_base + ((monitor_docker) | ternary(telegraf_plugins_default_extras_docker, [])) | select | list }}
+
     - name: Add telegraf user to docker group
-      become: true
       ansible.builtin.user:
         name: telegraf
         append: true
         groups: docker
+      when: monitor_docker
 
     - name: Restart service telegraf
-      become: true
       ansible.builtin.service:
         name: telegraf
         state: restarted
