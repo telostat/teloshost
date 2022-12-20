@@ -1,0 +1,19 @@
+## Install this via:
+##
+## ```sh
+## ansible-galaxy install -r requirements.yaml
+## ````
+
+roles:
+  - name: dj-wasabi.telegraf
+    version: 0.13.3
+
+  - name: geerlingguy.docker
+    version: 6.0.4
+
+collections:
+  - name: ansible.posix
+    version: 1.4.0
+
+  - name: community.general
+    version: 6.1.0

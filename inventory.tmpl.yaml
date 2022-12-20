@@ -1,0 +1,18 @@
+all:
+  hosts:
+    teloshost:
+      teloshost__base__ssh__authorized_keys__extras:
+        - <CHANGEME>
+        - <CHANGEME>
+      teloshost__base__packages__extras:
+        - <CHANGEME>
+      teloshost__docker__enable: false
+
+  vars:
+    teloshost__base__ssh__authorized_keys__common:
+      - <CHANGEME>
+      - <CHANGEME>
+    teloshost__monitoring__telegraf__url: <CHANGEME>
+    teloshost__monitoring__telegraf__token: <CHANGEME>
+    teloshost__monitoring__telegraf__bucket: <CHANGEME>
+    teloshost__monitoring__telegraf__organization: <CHANGEME>

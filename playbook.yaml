@@ -1,0 +1,72 @@
+## Purpose: Setup a teloshost system.
+##
+## This playbook uses various playbooks from the `./partials` directory to setup
+## a typical teloshost. We consider this a standard base system for all
+## teloshosts.
+
+########################
+## SECTION: SET FACTS ##
+########################
+
+- name: Set facts
+  hosts: all
+
+  tasks:
+    - name: Set teloshost facts
+      ansible.builtin.set_fact:
+        teloshost__logfile: "/var/log/teloshost.yaml"
+
+#######################
+## SECTION: PREAMBLE ##
+#######################
+
+- name: Import preamble playbook
+  ansible.builtin.import_playbook: ./partials/00_preamble.yaml
+
+###################
+## SECTION: BASE ##
+###################
+
+- name: Import playbook to setup base (Configure hostname)
+  ansible.builtin.import_playbook: ./partials/01_base_01_hostname.yaml
+- name: Import playbook to setup base (Configure timezone)
+  ansible.builtin.import_playbook: ./partials/01_base_02_timezone.yaml
+- name: Import playbook to setup base (Configure sudo)
+  ansible.builtin.import_playbook: ./partials/01_base_03_sudo.yaml
+- name: Import playbook to setup base (Configure SSH)
+  ansible.builtin.import_playbook: ./partials/01_base_04_ssh.yaml
+
+##############################
+## SECTION: SYSTEM PACKAGES ##
+##############################
+
+- name: Import playbook to install system packages
+  ansible.builtin.import_playbook: ./partials/02_system_packages.yaml
+
+#####################################
+## SECTION: SERVICES (DOCKER HOST) ##
+#####################################
+
+- name: Import playbook to setup Docker hosts
+  ansible.builtin.import_playbook: ./partials/03_service_docker.yaml
+  when: teloshost__docker__enable is defined and teloshost__docker__enable is truthy(convert_bool=True)
+
+#########################
+## SECTION: MONITORING ##
+#########################
+
+- name: Import playbook to setup and configure monitoring
+  ansible.builtin.import_playbook: ./partials/04_monitoring.yaml
+  when: |
+    (teloshost__monitoring__enable is not defined or teloshost__monitoring__enable is truthy(convert_bool=True)) and
+    (teloshost__monitoring__telegraf__url is defined) and
+    (teloshost__monitoring__telegraf__token is defined) and
+    (teloshost__monitoring__telegraf__bucket is defined) and
+    (teloshost__monitoring__telegraf__organization is defined)
+
+#######################
+## SECTION: EPILOGUE ##
+#######################
+
+- name: Import epilogue playbook
+  ansible.builtin.import_playbook: ./partials/99_epilogue.yaml

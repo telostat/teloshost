@@ -1,0 +1,17 @@
+## Purpose: Configure sudo.
+## Idempotent: Yes.
+##
+## This playbook configures sudo.
+
+- name: Configure sudo
+  hosts: all
+
+  tasks:
+    - name: Ensure that sudo group can sudo without password
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: "^%sudo"
+        line: "%sudo ALL=(ALL) NOPASSWD: ALL"
+        validate: "visudo -cf %s"
