@@ -1,0 +1,27 @@
+## Purpose: Setup a Caddy Host.
+## Idempotent: Yes, unless variables change.
+##
+## This playbook performs necessary actions for setting up a Caddy Host.
+
+- name: Setup Caddy Host (Service Installation)
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Run caddy_ansible.caddy_ansible role
+      ansible.builtin.include_role:
+        name: caddy_ansible.caddy_ansible
+      vars:
+        caddy_setcap: true
+        caddy_systemd_capabilities_enabled: true
+        caddy_config_update: false
+        caddy_config: |
+          import /etc/caddy/conf.d/*
+
+    - name: Create /etc/caddy/conf.d directory if it does not exist
+      ansible.builtin.file:
+        path: /etc/caddy/conf.d
+        state: directory
+        mode: '0755'
+        owner: www-data
+        group: root

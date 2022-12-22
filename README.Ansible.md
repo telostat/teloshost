@@ -32,6 +32,7 @@ For further information about the variable presendence, see:
 | base       | `teloshost__base__ssh__authorized_keys__extras` | variable  | list of strings | `[]`                 | A list of GitHub logins                            |
 | base       | `teloshost__base__packages__common`             | static    | list of strings | provided by Ansible  | Default system packages to be installed.           |
 | base       | `teloshost__base__packages__extras`             | variable  | list of strings | `[]`                 | List of extra system packages to be installed.     |
+| caddy      | `teloshost__caddy__enable`                      | variable  | boolean         | `false`              | Indication to enable Caddy service or not          |
 | docker     | `teloshost__docker__enable`                     | variable  | boolean         | `false`              | Indication to enable Docker service or not         |
 | docker     | `teloshost__docker__ctop_version`               | variable  | string          | `0.7.7`              | Version of `ctop` to be installed                  |
 | monitoring | `teloshost__monitoring__enable`                 | variable  | boolean         | `true`               |                                                    |
