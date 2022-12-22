@@ -17,3 +17,4 @@
           timestamp: "{{ ansible_date_time.iso8601 }}"
           source: ansible
           message: finished
+          version: "{{ teloshost__version }}"

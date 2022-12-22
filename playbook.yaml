@@ -14,6 +14,7 @@
   tasks:
     - name: Set teloshost facts
       ansible.builtin.set_fact:
+        teloshost__version: "0.0.1-SNAPSHOT"
         teloshost__logfile: "/var/log/teloshost.yaml"
 
 #######################
