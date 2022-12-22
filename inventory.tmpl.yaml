@@ -6,6 +6,7 @@ all:
         - <CHANGEME>
       teloshost__base__packages__extras:
         - <CHANGEME>
+      teloshost__caddy__enable: false
       teloshost__docker__enable: false
 
   vars:
