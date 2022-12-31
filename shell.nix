@@ -18,6 +18,7 @@ pkgs.mkShell {
     pkgs.ansible
     pkgs.ansible-language-server
     pkgs.ansible-lint
+    pkgs.git-chglog
   ];
   shellHook = ''
     PYTHONPATH=${python-with-packages}/${python-with-packages.sitePackages}
