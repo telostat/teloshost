@@ -9,6 +9,12 @@ let
     black
     isort
   ]);
+
+  ## Get ansi command:
+  ansi = import (fetchTarball https://github.com/telostat/nix-print-ansi/archive/main.tar.gz) { };
+
+  ## Create scripts:
+  release = pkgs.writeShellScriptBin "release" (builtins.readFile ./release.sh);
 in
 pkgs.mkShell {
   buildInputs = [
@@ -18,8 +24,17 @@ pkgs.mkShell {
     pkgs.ansible
     pkgs.ansible-language-server
     pkgs.ansible-lint
+    pkgs.git-chglog
+
+    ansi
+    release
   ];
   shellHook = ''
     PYTHONPATH=${python-with-packages}/${python-with-packages.sitePackages}
+
+    echo
+    ansi --yellow --underline "Available Commands"
+    echo
+    ansi --yellow "release"
   '';
 }
