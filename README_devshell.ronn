@@ -1,0 +1,76 @@
+# teloshost(7) -- Manage teloshost
+
+## DESCRIPTION
+
+A `teloshost` is an Ubuntu server that we provision in an opinionated way. The
+objective is to streamline management of servers provisioned regardless of their
+ultimate purpose.
+
+## USAGE
+
+### ANSIBLE PLAYBOOK USAGE
+
+Firstly, enter the Nix shell:
+
+```
+nix-shell
+```
+
+Install Ansible requirements:
+
+```
+ansible-galaxy install -r requirements.yaml
+```
+
+Copy `./inventory.tmpl.yaml` file (e.g. `./inventory.yaml`) and edit it. Once
+you are done, run the playbook:
+
+```
+ansible-playbook -i inventory.yaml playbook.yaml
+```
+
+For details, refer to [README.Ansible.md](./README.Ansible.md).
+
+## TESTING
+
+First, copy and edit cloud-init configuration and Ansible inventory:
+
+    $ cp cloud-config.tmpl.yaml cloud-config.test.yaml
+
+    $ cp inventory.tmpl.yaml inventory.test.yaml
+
+
+Launch an lxc with the custom cloud-init user data:
+
+    $ lxc launch ubuntu:jammy teloshost --config=user.user-data="$(cat ./cloud-config.test.yaml)"
+
+    $ lxc exec teloshost -- cloud-init status --wait
+
+Create an SSH host entry for `teloshost`. Create an inventory file from the
+provided template, and then, run Ansible playbook:
+
+    $ ansible-playbook -i inventory.test.yaml playbook.yaml
+
+
+### USEFULL COMMANDS
+
+* `lxc list`:
+  List current lxc instances and locate the test container
+
+* `lxc shell teloshost`:
+  Enter the shell
+
+* `cloud-init status --wait`:
+  Wait until cloud-init to complete successfully
+
+* `cloud-init query userdata`:
+  Verify that cloud-init has received expected user data
+
+* `cloud-init schema --system --annotate`:
+  Assert that provided user data is a valid cloud-config
+
+* `lxc stop teloshost`:
+  Stop the container
+
+* `lxc rm teloshost`:
+  Remove the container
