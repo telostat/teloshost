@@ -20,7 +20,7 @@ In a nutshell:
    3. Requested service installations and configurations are performed.
    4. Monitoring is setup.
 
-## Usage
+## Usage 
 
 Very briefly:
 
