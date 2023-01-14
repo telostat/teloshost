@@ -1,0 +1,9 @@
+teloshost__base__ssh__authorized_keys__extras: []
+teloshost__base__packages__extras: []
+teloshost__caddy__enable: false
+teloshost__docker__enable: false
+teloshost__base__ssh__authorized_keys__common: []
+teloshost__monitoring__telegraf__url: <CHANGEME>
+teloshost__monitoring__telegraf__token: <CHANGEME>
+teloshost__monitoring__telegraf__bucket: <CHANGEME>
+teloshost__monitoring__telegraf__organization: <CHANGEME>
