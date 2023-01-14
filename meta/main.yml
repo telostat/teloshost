@@ -1,0 +1,37 @@
+galaxy_info:
+  role_name: teloshost
+  author: Mehmet Fatih Koksal
+  description: Setup and configure a teloshost
+  company: Telostat Pte Ltd
+  license: license (MIT)
+  min_ansible_version: 2.8
+
+  platforms:
+    - name: Debian
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all 
+
+  galaxy_tags:
+    - system
+    - cloud
+    - automation
+    - monitoring
+
+dependencies:
+  - role: caddy_ansible.caddy_ansible
+    version: v3.2.0
+
+  - role: dj-wasabi.telegraf
+    version: 0.13.3
+
+  - role: geerlingguy.docker
+    version: 6.0.4 
+
+  - collection: ansible.posix
+    version: 1.4.0
+
+  - collection: community.general
+    version: 6.1.0
