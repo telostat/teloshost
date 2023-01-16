@@ -29,9 +29,3 @@ dependencies:
 
   - role: geerlingguy.docker
     version: 6.0.4 
-
-  - collection: ansible.posix
-    version: 1.4.0
-
-  - collection: community.general
-    version: 6.1.0
