@@ -4,18 +4,14 @@
 ## This playbook performs necessary actions for setting up a Docker Host.
 
 - name: Setup Docker Host (Service Installation)
-  hosts: all
   become: true
-
-  tasks:
+  block:
     - name: Run geerlingguy.docker role
       ansible.builtin.include_role:
         name: geerlingguy.docker
 
 - name: Setup Docker Host (Service Configuration and Auxiliaries)
-  hosts: all
-
-  tasks:
+  block:
     - name: Ensure current user is added to the docker group
       become: true
       ansible.builtin.user:

@@ -5,12 +5,10 @@
 ## remote teloshost.
 
 - name: Setup Base (Monitoring)
-  hosts: all
   become: true
   vars:
     monitor_docker: "{{ teloshost__docker__enable is defined and teloshost__docker__enable is truthy(convert_bool=True) }}"
-
-  tasks:
+  block:
     - name: Run dj-wasabi.telegraf role
       ansible.builtin.include_role:
         name: dj-wasabi.telegraf

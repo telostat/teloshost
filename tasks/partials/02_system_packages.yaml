@@ -4,10 +4,18 @@
 ## This playbook install essential system packages. If required, additional
 ## packages can be installed via `teloshost__base__packages__extras` variable.
 
-- name: Setup Base (System Packages)
-  hosts: all
+- name: Update APT cache and upgrade installed packages
+  become: true
+  ansible.builtin.apt:
+    upgrade: safe ## TODO: Think about possible issues we may encounter during production.
+    update_cache: true
+
+- name: Install system packages (both common and extras)
+  become: true
+  ansible.builtin.apt:
+    name: "{{ common + extras }}"
   vars:
-    teloshost__base__packages__common:
+    common:
       - ack
       - curl
       - htop
@@ -20,18 +28,4 @@
       - screen
       - tmux
       - vim
-
-  tasks:
-    - name: Update APT cache and upgrade installed packages
-      become: true
-      ansible.builtin.apt:
-        upgrade: safe  ## TODO: Think about possible issues we may encounter during production.
-        update_cache: true
-
-    - name: Install system packages (both common and extras)
-      become: true
-      ansible.builtin.apt:
-        name: "{{ common + extras }}"
-      vars:
-        common: "{{ teloshost__base__packages__common }}"
-        extras: "{{ teloshost__base__packages__extras | default([], true) }}"
+    extras: "{{ teloshost__base__packages__extras | default([], true) }}"
