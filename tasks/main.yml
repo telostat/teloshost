@@ -38,9 +38,9 @@
 ## SECTION: SERVICES (DOCKER HOST) ##
 #####################################
 
-# - name: Import playbook to setup Caddy hosts
-#   ansible.builtin.import_tasks: ./partials/03_service_caddy.yaml
-#   when: teloshost__caddy__enable is defined and teloshost__caddy__enable is truthy(convert_bool=True)
+- name: Import playbook to setup Caddy hosts
+  ansible.builtin.import_tasks: ./partials/03_service_caddy.yaml
+  when: teloshost__caddy__enable is defined and teloshost__caddy__enable is truthy(convert_bool=True)
 - name: Import playbook to setup Docker hosts
   ansible.builtin.import_tasks: ./partials/03_service_docker.yaml
   when: teloshost__docker__enable is defined and teloshost__docker__enable is truthy(convert_bool=True)
