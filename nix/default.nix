@@ -25,8 +25,8 @@ let
   ## Get the devshell tool:
   devshell = telosnix.tools.devshell {
     name = "teloshost";
-    welcome = ../README_welcome.md;
-    help = ../README_devshell.ronn;
+    quickstart = ./guide/src/quickstart.md;
+    guide = ./guide;
     src = ../.;
   };
 
@@ -46,7 +46,8 @@ let
     shellHook = ''
       PYTHONPATH=${python-with-packages}/${python-with-packages.sitePackages}
 
-      devshell-banner
+      ## Show devshell welcome message:
+      devsh welcome
     '';
 
   };
