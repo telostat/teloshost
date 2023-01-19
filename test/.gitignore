@@ -1,0 +1,11 @@
+## Ignore all cloud-config.yaml files:
+/cloud-config*.yaml
+
+## Do not ignore template cloud-config.yml file (used for testing purposes):
+!/cloud-config.tmpl.yaml
+
+## Ignore all inventory.yaml files:
+/inventory*yaml
+
+## Do not ignore template inventory.yaml file (used for testing purposes):
+!/inventory.tmpl.yaml
