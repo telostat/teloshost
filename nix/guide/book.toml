@@ -1,0 +1,9 @@
+[book]
+title = "Teloshost - Development Shell Guide"
+description = "This is the Development Shell Guide for Teloshost."
+
+[output.html]
+default-theme = "light"
+curly-quotes = true
+mathjax-support = true
+copy-fonts = true

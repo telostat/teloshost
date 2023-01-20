@@ -1,0 +1,10 @@
+all:
+  hosts:
+    testing:
+      teloshost__caddy__enable: true
+      teloshost__docker__enable: true
+      teloshost__monitoring__enable: true
+      teloshost__monitoring__telegraf__url: <CHANGEME>
+      teloshost__monitoring__telegraf__token: <CHANGEME>
+      teloshost__monitoring__telegraf__bucket: <CHANGEME>
+      teloshost__monitoring__telegraf__organization: <CHANGEME>

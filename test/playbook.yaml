@@ -1,0 +1,5 @@
+- name: Setup a teloshost
+  hosts: all
+  become: true
+  roles:
+    - name: teloshost

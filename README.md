@@ -1,136 +1,82 @@
 # teloshost
 
-This repository contains [cloud-init][cloud-init] configuration template and
-[Ansible][ansible] playbook to setup and configure a `teloshost`.
+This repository contains [Ansible][ansible] role to setup and configure a `teloshost`.
 
 A `teloshost` is an Ubuntu server that we provision in an opinionated way. The
 objective is to streamline management of servers provisioned regardless of their
 ultimate purpose.
 
-In a nutshell:
+This ansible role ensures that:
 
-1. Cloud-init template ensures that:
-   1. Timezone, hostname and fqdn are set.
-   2. Package updates and upgrades are performed before we run Ansible playbooks.
-   3. We have a default user, namely `patron`.
-   4. Initial SSH authorized keys are added to `patron` user.
-2. Ansible playbook ensures that:
-   1. Base system is configured.
-   2. System packages are installed.
-   3. Requested service installations and configurations are performed.
-   4. Monitoring is setup.
+1.  Base system is configured.
+2.  System packages are installed.
+3.  Requested service installations and configurations are performed.
+4.  Monitoring is setup.
 
-## Usage 
+## Requirements
 
-Very briefly:
-
-1. Cloud-init is used only once when we provision a new server on the cloud
-   service provider.
-2. Ansible playbook is immediately after the server is provisioned and onwards
-   on an ongoing basis.
-
-### Cloud-init Usage
-
-Just copy `./cloud-config.tmpl.yaml` file and edit it. Once you are done, copy
-and paste the contents of the file to the management console of your cloud
-service provider when you are prompted.
-
-Below table provides the required parameters:
-
-| Key             | Type     | Example                              |
-| --------------- | -------- | ------------------------------------ |
-| `hostname`      | `string` | `teloshost`                          |
-| `fqdn`          | `string` | `teloshost.dev.mac.sys.telostat.com` |
-| `ssh_import_id` | `array`  | `["gh:fkoksal", "gh:vst"]`           |
-
-You may wish to perform further configuration if you are familiar with cloud-init.
-
-### Ansible Playbook Usage
-
-Firstly, enter the Nix shell:
+Teloshost requires the following roles to be installed (if enabled):
 
 ```sh
-nix-shell
+ansible-galaxy install caddy_ansible.caddy_ansible
+ansible-galaxy install dj-wasabi.telegraf
+ansible-galaxy install geerlingguy.docker
 ```
 
-Install Ansible requirements:
+## Role Variables
+
+Variables can be set in one of these locations (from least to highest
+presendence) among many others:
+
+1. inventory configuration (for all hosts): `all.vars.teloshost__{*}`
+2. inventory configuration (for specific hosts): `all.hosts.<hostname>.teloshost__{*}`
+3. variables file: `teloshost__{*}`
+
+To avoid inventory host specific timezone to be overridden by variables file, it
+is not advised to set this variable in anywhere else then the inventory
+configuration.
+
+For further information about the variable presendence, see:
+
+<https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#variable-precedence-where-should-i-put-a-variable>
+
+## Configuration Variables
+
+| Group      | Variables                                       | Provision | Type            | Default              | Notes                                              |
+| ---------- | ----------------------------------------------- | --------- | --------------- | -------------------- | -------------------------------------------------- |
+| global     | `inventory_hostname`                            | static    | string          | provided by Ansible  |                                                    |
+| global     | `ansible_user_id`                               | static    | string          | provided by Ansible  | Username used to establish the SSH connection with |
+| global     | `teloshost__logfile`                            | static    | path            | provided by playbook | Set to `/var/log/teloshost.yaml`                   |
+| base       | `teloshost__base__timezone`                     | variable  | string          | `UTC`                |                                                    |
+| base       | `teloshost__base__ssh__authorized_keys__common` | variable  | list of strings | `[]`                 | A list of GitHub logins                            |
+| base       | `teloshost__base__ssh__authorized_keys__extras` | variable  | list of strings | `[]`                 | A list of GitHub logins                            |
+| base       | `teloshost__base__packages__common`             | static    | list of strings | provided by Ansible  | Default system packages to be installed.           |
+| base       | `teloshost__base__packages__extras`             | variable  | list of strings | `[]`                 | List of extra system packages to be installed.     |
+| caddy      | `teloshost__caddy__enable`                      | variable  | boolean         | `false`              | Indication to enable Caddy service or not          |
+| docker     | `teloshost__docker__enable`                     | variable  | boolean         | `false`              | Indication to enable Docker service or not         |
+| docker     | `teloshost__docker__ctop_version`               | variable  | string          | `0.7.7`              | Version of `ctop` to be installed                  |
+| monitoring | `teloshost__monitoring__enable`                 | variable  | boolean         | `true`               |                                                    |
+| monitoring | `teloshost__monitoring__telegraf__url`          | variable  | string          |                      |                                                    |
+| monitoring | `teloshost__monitoring__telegraf__token`        | variable  | string          |                      |                                                    |
+| monitoring | `teloshost__monitoring__telegraf__bucket`       | variable  | string          |                      |                                                    |
+| monitoring | `teloshost__monitoring__telegraf__organization` | variable  | string          |                      |                                                    |
+
+## Dependencies
+
+None
+
+## Example Playbook
 
 ```sh
-ansible-galaxy install -r requirements.yaml
+- name: Setup a teloshost
+  hosts: all
+  become: true
+  roles:
+    - name: teloshost
 ```
 
-Copy `./inventory.tmpl.yaml` file (e.g. `./inventory.yaml`) and edit it. Once
-you are done, run the playbook:
+## License
 
-```sh
-ansible-playbook -i inventory.yaml playbook.yaml
-```
+MIT
 
-For details, refer to [README.Ansible.md](./README.Ansible.md).
-
-## Testing
-
-First, copy and edit cloud-init configuration and Ansible inventory:
-
-```sh
-cp cloud-config.tmpl.yaml cloud-config.test.yaml
-cp inventory.tmpl.yaml inventory.test.yaml
-```
-
-Launch an lxc with the custom cloud-init user data:
-
-```sh
-lxc launch ubuntu:jammy teloshost --config=user.user-data="$(cat ./cloud-config.test.yaml)"
-lxc exec teloshost -- cloud-init status --wait
-```
-
-Create an SSH host entry for `teloshost`. Create an inventory file from the
-provided template, and then, run Ansible playbook:
-
-```sh
-ansible-playbook -i inventory.test.yaml playbook.yaml
-```
-
-### Useful commands
-
-List current lxc instances and locate the test container:
-
-```sh
-lxc list
-```
-
-Enter the shell:
-
-```sh
-lxc shell teloshost
-```
-
-Wait until cloud-init to complete successfully:
-
-```sh
-cloud-init status --wait
-```
-
-Verify that cloud-init has received expected user data:
-
-```sh
-cloud-init query userdata
-```
-
-Assert that provided user data is a valid cloud-config:
-
-```sh
-cloud-init schema --system --annotate
-```
-
-Finally, verify that provided user data was applied successfully.
-
-You can tear down the container now:
-
-```sh
-lxc stop teloshost
-lxc rm teloshost
-```
-
-[cloud-init]: https://cloudinit.readthedocs.io
 [ansible]: https://docs.ansible.com

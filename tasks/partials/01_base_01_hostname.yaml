@@ -1,0 +1,9 @@
+## Purpose: Set the hostname of the target host.
+## Idempotent: Yes.
+##
+## We always consider that the inventory hostname is the target host's hostname.
+
+- name: Set hostname
+  become: true
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"

@@ -1,14 +1,14 @@
 {
     "telosnix": {
-        "branch": "24cf4faeaa10119568cfafcc8f0f70065e74d8c3",
+        "branch": "v0.0.6",
         "description": null,
         "homepage": null,
         "owner": "telostat",
         "repo": "telos.nix",
-        "rev": "24cf4faeaa10119568cfafcc8f0f70065e74d8c3",
-        "sha256": "1wxj9sckshnc13jcx04b6l1f27g91gh47zibl1kagmvrv5623kd8",
+        "rev": "c0b76b80df8c8cc61383bee9fdcb81e45b53f919",
+        "sha256": "08kd5ivhm3hjkiw28cifmbjywbm7fsvzbwb7prsdnqmam6ij278i",
         "type": "tarball",
-        "url": "https://github.com/telostat/telos.nix/archive/24cf4faeaa10119568cfafcc8f0f70065e74d8c3.tar.gz",
+        "url": "https://github.com/telostat/telos.nix/archive/c0b76b80df8c8cc61383bee9fdcb81e45b53f919.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

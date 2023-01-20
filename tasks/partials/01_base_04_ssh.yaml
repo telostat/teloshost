@@ -1,0 +1,15 @@
+## Purpose: Perform SSH configuration.
+## Idempotent: Yes, unless variables change.
+##
+## This playbook performs SSH server and access configuration.
+
+- name: Add authorized keys for user
+  ansible.posix.authorized_key:
+    user: "{{ ansible_user_id }}"
+    state: present
+    key: "https://github.com/{{ item }}.keys"
+    comment: "Updated by ansible via https://github.com/{{ item }}.keys"
+  with_items: "{{ common + extras }}"
+  vars:
+    common: "{{ teloshost__base__ssh__authorized_keys__common | default([], true) }}"
+    extras: "{{ teloshost__base__ssh__authorized_keys__extras | default([], true) }}"
