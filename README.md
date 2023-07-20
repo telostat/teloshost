@@ -47,6 +47,7 @@ For further information about the variable presendence, see:
 | global     | `inventory_hostname`                            | static    | string          | provided by Ansible  |                                                    |
 | global     | `ansible_user_id`                               | static    | string          | provided by Ansible  | Username used to establish the SSH connection with |
 | global     | `teloshost__logfile`                            | static    | path            | provided by playbook | Set to `/var/log/teloshost.yaml`                   |
+| global     | `teloshost__username`                           | static    | string          | provided by playbook | Set to `patron`                 |
 | base       | `teloshost__base__timezone`                     | variable  | string          | `UTC`                |                                                    |
 | base       | `teloshost__base__ssh__authorized_keys__common` | variable  | list of strings | `[]`                 | A list of GitHub logins                            |
 | base       | `teloshost__base__ssh__authorized_keys__extras` | variable  | list of strings | `[]`                 | A list of GitHub logins                            |

@@ -1,6 +1,7 @@
 all:
   hosts:
     testing:
+      teloshost__username: "patron"
       teloshost__caddy__enable: true
       teloshost__docker__enable: true
       teloshost__monitoring__enable: true

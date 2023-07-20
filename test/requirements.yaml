@@ -10,7 +10,7 @@ roles:
     version: v3.2.0
 
   - name: dj-wasabi.telegraf
-    version: 0.13.3
+    version: 0.14.0
 
   - name: geerlingguy.docker
-    version: 6.0.4
+    version: 6.1.0
